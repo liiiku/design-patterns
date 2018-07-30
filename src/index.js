@@ -1,29 +1,43 @@
-class jQuery {
-  constructor(selector) {
-    let slice = Array.prototype.slice
-    let dom = slice.call(document.querySelectorAll(selector))
-    let len = dom ? dom.length : 0
-    for (let i = 0; i < len; i++) {
-      this[i] = dom[i]
-    }
-    this.length = len
-    this.selector = selector || ''
-  }
-  append(node) {
-
-  }
-  addClass(name) {
-
-  }
-  html(data) {
-
+// 车 父类
+class Car {
+  constructor(number, name) {
+    this.number = number
+    this.name = name
   }
 }
 
-window.$ = function(selector) {
-  return new jQuery(selector)
+// 快车 Kuaiche
+class Kuaiche extends Car {
+  constructor(number, name) {
+    super(number, name)
+    this.price = 1
+  }
 }
 
-let $p = $('p')
-console.log($p)
-console.log($p.addClass)
+// 专车 Zhuanche
+class Zhuanche extends Car {
+  constructor(number, name) {
+    super(number, name)
+    this.price = 2
+  }
+}
+
+
+// 行程
+class Trip {
+  constructor(car) {
+    this.car = car
+  }
+  start() {
+    console.log(`行程开始，名称：${this.car.name}，车牌号：${this.car.name}`)
+  }
+  end() {
+    console.log('行程结束，金额：' + this.car.price * 5)
+  }
+}
+
+// 测试
+let car = new Kuaiche(100, '大众汽车')
+let trip = new Trip(car)
+trip.start()
+trip.end()
