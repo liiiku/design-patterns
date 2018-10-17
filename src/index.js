@@ -1,37 +1,44 @@
-class Product {
-  constructor(name) {
-    this.name = name
+// 主题，保存状态，状态变化之后触发所有观察者对象
+class Subject {
+  constructor() {
+    this.state = 0
+    this.observers = []
   }
-  init() {
-    console.log('init', this.name)
+  getState() {
+    return this.state
   }
-  fn1() {
-    console.log('fn1')
+  setState(state) {
+    this.state = state
+    this.notifyAllObservers()
   }
-  fn2() {
-    console.log('fn2')
+  notifyAllObservers() {
+    this.observers.forEach(observer => {
+      observer.update()
+    })
+  }
+  attach(observer) {
+    this.observers.push(observer)
   }
 }
 
-// 工厂
-// class Creator {
-//   create(name) {
-//     return new Product(name)
-//   }
-// }
-
-let OP = function(name) {
-  return new Product(name)
+// 观察者
+class Observer {
+  constructor(name, subject) {
+    this.name = name
+    this.subject = subject
+    this.subject.attach(this)
+  }
+  update() {
+    console.log(`${this.name} update, state: ${this.subject.getState()}`)
+  }
 }
 
 // 测试
-// let creator = new Creator()
-// let p = creator.create('p1')
-// p.init()
-// p.fn1()
-// p.fn2()
+let s = new Subject()
+let o1 = new Observer('o1', s)
+let o2 = new Observer('o2', s)
+let o3 = new Observer('o3', s)
 
-let op = OP('p1')
-op.init()
-op.fn1()
-op.fn2()
+s.setState(1)
+s.setState(2)
+s.setState(3)
