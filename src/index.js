@@ -1,24 +1,44 @@
-class Person {
-  constructor(name, age) {
+// 主题，保存状态，状态变化之后触发所有观察者对象
+class Subject {
+  constructor() {
+    this.state = 0
+    this.observers = []
+  }
+  getState() {
+    return this.state
+  }
+  setState(state) {
+    this.state = state
+    this.notifyAllObservers()
+  }
+  notifyAllObservers() {
+    this.observers.forEach(observer => {
+      observer.update()
+    })
+  }
+  attach(observer) {
+    this.observers.push(observer)
+  }
+}
+
+// 观察者
+class Observer {
+  constructor(name, subject) {
     this.name = name
-    this.age = age
+    this.subject = subject
+    this.subject.attach(this)
   }
-  speak() {
-    console.log(`My name is ${this.name}, I am ${this.age} years old.`)
-  }
-}
-
-class Student extends Person {
-  constructor(name, age, number) {
-    super(name, age)
-    this.number = number
-  }
-  study() {
-    console.log(`${this.name} is studying.`)
+  update() {
+    console.log(`${this.name} update, state: ${this.subject.getState()}`)
   }
 }
 
-let xiaoming = new Student('xiaoming', 24, 'A1')
-xiaoming.study()
-xiaoming.speak()
-console.log(xiaoming.number)
+// 测试
+let s = new Subject()
+let o1 = new Observer('o1', s)
+let o2 = new Observer('o2', s)
+let o3 = new Observer('o3', s)
+
+s.setState(1)
+s.setState(2)
+s.setState(3)
